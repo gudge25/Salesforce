@@ -1,0 +1,19 @@
+sfdx_commands.txt
+
+#### DELETE FLOW VERSIONS
+--sfdx force:data:soql:query --query "SELECT Id, Definition.DeveloperName, VersionNumber FROM Flow WHERE Status = 'Obsolete'" -u QA  --usetoolingapi
+--sfdx force:data:soql:query --query "SELECT Id, Definition.DeveloperName, VersionNumber, Status FROM Flow WHERE DEFINITION.DEVELOPERNAME = 'Order_Delivery_Support_Order_Automation'" -u QA  --usetoolingapi
+--sfdx force:data:soql:query --query "SELECT Id, Definition.DeveloperName, VersionNumber, Status FROM Flow WHERE DEFINITION.DEVELOPERNAME = 'WK_Order_StatusAutomationFlow' AND Status = 'Obsolete'  " -u QA  --usetoolingapi
+
+#!/bin/bash
+sfdx force:data:soql:query --query "SELECT Id FROM Flow WHERE DEFINITION.DEVELOPERNAME = 'WK_Order_StatusAutomationFlow' AND Status = 'Obsolete'" -u QA  --usetoolingapi --resultformat csv > flowVersionsTodelete.csv
+
+while read c; do
+    if [[ "$c" != "Id" && "$c" != "Your query returned no results." ]]
+        then
+            sfdx force:data:record:delete  -u QA --sobjecttype Flow --sobjectid $c --usetoolingapi
+    fi
+done < flowVersionsTodelete.csv
+
+
+while IFS= read -r line; do ./scripts/changeSets.sh $line; done < list.txt
