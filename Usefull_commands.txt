@@ -23,3 +23,8 @@ while IFS= read -r line; do ./scripts/changeSets.sh $line; done < list.txt
 sfdx force:org:display -u DEV --verbose --json > authFile.json
 then use it in DEV_AUTH_URL.txt
 sfdx force:auth:sfdxurl:store --sfdxurlfile=./DEV_AUTH_URL.txt --setalias DEV
+
+#Retreave and deploy
+sfdx force source retrieve -m "Flow:WK_CollectionQueueIds" -u QA
+sfdx force source deploy -m "Flow:WK_CollectionQueueIds" -u UAT 
+
