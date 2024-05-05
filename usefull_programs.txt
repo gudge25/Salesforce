@@ -1,0 +1,2 @@
+## Genetare random data in ordet to  put inside SF
+https://snowfakery.readthedocs.io/en/latest/index.html
